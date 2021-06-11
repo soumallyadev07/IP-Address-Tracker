@@ -29,7 +29,7 @@ def before_request():
 
 @app.route('/')
 def index():
-    return render_template('login.html', sawo_key=sawo_key, map_key=map_key)
+    return render_template('login.html', sawo_key=sawo_key, map_key=map_key, geoip_key=geoip_key)
 
 
 @app.route('/login', methods=['GET','POST'] )
