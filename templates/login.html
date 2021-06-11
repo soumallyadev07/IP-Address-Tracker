@@ -91,6 +91,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         var ip = "";
+        var mymap = L.map('mapid', { zoomDelta: 0.25, zoomSnap: 0})
         $.getJSON("https://api.ipify.org?format=json",function(data) {
             console.log(data.ip);
             ip = data.ip;
