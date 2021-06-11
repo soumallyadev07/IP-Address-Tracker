@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block loginlink %}{{ url_for('logout') }}{% endblock %}
+{% block login %}Logout{% endblock %}
+
+{% block content %}
+    <div class="firstdiv">
+        <h2 class="titlename">IP Address Tracker</h2>
+        <div style="position: relative; text-align: center;overflow: visible;">
+            <form id="myForm">
+                <input type="text" id="ipdomain" class="bedrijfsmail" placeholder="IP/Domain" style="background-color: white; color: black; font-size: 18px;" required>
+                <div class="inputwrapper" style="background-color: #3f3f3f; padding-left: 10px;">
+                    <label><input type="submit" value="" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path transform="translate(16, 10)" fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6"/></svg>
+                    </label>
+                </div>
+                <div class="seconddiv">
+                    <div>
+                        <p>IP ADDRESS</p>
+                        <h5 id="ipaddr">192.212.174.101</h5>
+                    </div>
+                    <div>
+                        <p>LOCATION</p>
+                        <h5 id="iploc">Brooklyn, NY</h5>
+                    </div>
+                    <div>
+                        <p>TIMEZONE</p>
+                        <h5 id="iptimezone">UTC -05:00</h5>
+                    </div>
+                    <div>
+                        <p>ISP</p>
+                        <h5 id="ipisp">SpaceX Starlink</h5>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="mapid"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        var mymap = L.map('mapid', { zoomDelta: 0.25, zoomSnap: 0})
+        var ip = "";
+        $.getJSON("https://api.ipify.org?format=json",function(data) {
+            console.log(data.ip);
+            ip = data.ip;
+            console.log(ip);
+
+            fetch('http://ip-api.com/json/'+ ip).then(function(response) {
+            return response.json();
+            }).then(function(data) {
+            console.log(data['country']);
+            mymap.setView([data['lat'], data['lon']], 15);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ map_key }}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'your.mapbox.access.token'
+            }).addTo(mymap);
+            var marker = L.marker([data['lat'], data['lon']]).addTo(mymap);
+
+            document.getElementById("ipaddr").innerHTML = ip;
+            document.getElementById("iploc").innerHTML = data['city'] + ', ' + data['regionName'] ;
+            document.getElementById("iptimezone").innerHTML = data['timezone'];
+            document.getElementById("ipisp").innerHTML = data['isp'];
+            }).catch(function() {
+            console.log("Error");
+            });
+        })
+        function ValidateIPaddress(ipaddress) {  
+            if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+                return (true)  
+            }  
+            return (false)  
+        } 
+        function ValidateDomain(domain) {  
+            if (/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/.test(domain)) {  
+                return (true)  
+            }  
+            return (false)  
+        } 
+        document.querySelector('#myForm').addEventListener('submit', function() {
+            event.preventDefault();
+            var params = "";
+            var data = document.getElementById('ipdomain').value;
+            if(ValidateIPaddress(data)){
+                params = "ipAddress";
+                console.log("ipAddress");
+                console.log(data);
+            }
+            else if (ValidateDomain(data)){
+                params = "domain";
+                console.log("domain");
+                console.log(data);
+            }
+            else{
+                alert("Invalid Domain/IP!");
+            }
+            var fetchlink = 'https://geo.ipify.org/api/v1?apiKey={{ geoip_key }}&'+ params + "=" + data;
+            console.log(fetchlink);
+            fetch(fetchlink).then(function(response) {
+            return response.json();
+            }).then(function(data) {
+                mymap.panTo(new L.LatLng(data['location']['lat'], data['location']['lng']), 15);
+                var marker = L.marker([data['location']['lat'], data['location']['lng']]).addTo(mymap);
+                document.getElementById("ipaddr").innerHTML = data['ip'];
+                document.getElementById("iploc").innerHTML = data['location']['city'] + ', ' + data['location']['region'] ;
+                document.getElementById("iptimezone").innerHTML = data['location']['timezone'];
+                document.getElementById("ipisp").innerHTML = data['isp'];
+            }).catch(function(err) {
+            console.log(err);
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <style>
+        @media (max-width: 440px) {
+            #sawoparent{
+                width: 350px!important;
+            }
+            #sawo-container {
+                width: 300px!important;
+            }
+        }
+        @media (max-width: 360px) {
+            #sawoparent{
+                width: 300px!important;
+            }
+            #sawo-container {
+                width: 280px!important;
+            }
+        }
+    </style>
+    <div class="firstdiv" style="height: 400px;">
+        <h2 class="titlename">IP Address Tracker</h2>
+        <div id="sawoparent" style="margin:auto; height: 220px; width: 420px; background-color: white; padding-top: 10px;border-radius: 15px;">
+            <div id="sawo-container" style="height: 200px; width: 400px; margin: auto;"></div>
+            <script>
+                var config = {
+                    // should be same as the id of the container created on 3rd step
+                    containerID: "sawo-container",
+                    // can be one of 'email' or 'phone_number_sms'
+                    identifierType: "phone_number_sms",
+                    // Add the API key copied from 2nd step
+                    apiKey: "{{ sawo_key }}",
+                    // Add a callback here to handle the payload sent by sdk
+                    onSuccess: (payload) => {
+                        console.log(payload);
+                        fetch('/login', {
+
+                        // Declare what type of data we're sending
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+
+                        // Specify the method
+                        method: 'POST',
+
+                        // A JSON payload
+                        body: JSON.stringify(payload)
+                        }).then(function (response) { // At this point, Flask has printed our JSON
+                        return response.text();
+                        }).then(function (text) {
+
+                        console.log('POST response: ');
+
+                        // Should be 'OK' if everything was successful
+                        console.log(text);
+                        if(text == "OK"){
+                            window.location.href = '/dashboard';
+                        }
+                        });
+                    },
+                };
+                var sawo = new Sawo(config);
+                sawo.showForm();
+            </script>
+        </div>
+        <div style="position: relative; text-align: center;overflow: visible;">
+            <div class="seconddiv">
+                <div>
+                    <p>IP ADDRESS</p>
+                    <h5 id="ipaddr">192.212.174.101</h5>
+                </div>
+                <div>
+                    <p>LOCATION</p>
+                    <h5 id="iploc">Brooklyn, NY</h5>
+                </div>
+                <div>
+                    <p>TIMEZONE</p>
+                    <h5 id="iptimezone">UTC -05:00</h5>
+                </div>
+                <div>
+                    <p>ISP</p>
+                    <h5 id="ipisp">SpaceX Starlink</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mapid"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        var ip = "";
+        $.getJSON("https://api.ipify.org?format=json",function(data) {
+            console.log(data.ip);
+            ip = data.ip;
+            console.log(ip);
+
+            fetch('http://ip-api.com/json/'+ ip).then(function(response) {
+            return response.json();
+            }).then(function(data) {
+            console.log(data['country']);
+            var mymap = L.map('mapid').setView([data['lat'], data['lon']], 15);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ map_key }}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'your.mapbox.access.token'
+            }).addTo(mymap);
+            var marker = L.marker([data['lat'], data['lon']]).addTo(mymap);
+
+            document.getElementById("ipaddr").innerHTML = ip;
+            document.getElementById("iploc").innerHTML = data['city'] + ', ' + data['regionName'] ;
+            document.getElementById("iptimezone").innerHTML = data['timezone'];
+            document.getElementById("ipisp").innerHTML = data['isp'];
+            }).catch(function() {
+            console.log("Error");
+            });
+        })
+        
+    </script>
+{% endblock %}

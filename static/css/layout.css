@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+
+*{
+    margin: auto 0;
+    font-family: 'Rubik', sans-serif;
+}
+
+*:focus {
+    outline: none;
+}
+  
+  nav {
+    background-color: black;
+  }
+  
+  .main-nav {
+    display: flex;
+    list-style: none;
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .titlename{
+      color: white;
+      font-weight: 400;
+  }
+
+  .seconddiv{
+    width: 70%;
+    margin: auto; 
+    background-color: white; 
+    margin-top: 40px; 
+    z-index: 100;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .seconddiv div{
+      padding: 20px;
+      flex: 24%;
+      max-width: 25%;
+  }
+
+
+
+  @media (max-width: 800px) {
+    .seconddiv div {
+      flex: 50%;
+      max-width: 50%;
+    }
+    .firstdiv{
+        height: 250px!important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .seconddiv div {
+      flex: 100%;
+      max-width: 100%;
+    }
+    .firstdiv{
+        height: 400px!important;
+    }
+  }
+
+  #mapid { 
+      height: 70vh;
+      z-index: 0; 
+    }
+
+  .firstdiv{
+      padding-top: 25px;
+      text-align:center;
+      background-image: url("../images/pattern-bg.png");
+      background-size:100%;
+      height: 200px;
+      overflow: visible;
+      position: relative;
+      z-index: 10;
+  }
+
+  .bedrijfsmail[type="text"] {
+    background: url('../images/technical-support.png') 22px center no-repeat;
+    border-color: #4A4A4A;
+    border-style: solid;
+    border-width: 1px 0px 1px 1px;
+    border-radius: 20px 0 0 20px;
+    box-sizing: content-box;
+    color: #fff;
+    margin: 0;
+    font-size: 1em;
+    width: 190px;
+    height: 20px;
+    padding: 10px 12px 10px 52px;
+    }
+    .inputwrapper
+    { 
+    position: relative;
+    right: 4px;
+    vertical-align: bottom;
+    display: inline-block; border-color: #4A4A4A;
+    border-style: solid;
+    border-radius: 0 20px 20px 0px;
+    margin: 0;
+    box-sizing: content-box;
+    border-width: 1px 1px 1px 0px; 
+    height: 40px; }
+    .inputwrapper svg
+    {cursor: pointer; height: 50px; width: 40px; position: relative; top: 4px; right: 6px;}
+    .inputwrapper svg:active
+    {position:relative; top: 5px; opacity: 0.8;}
+    
+    input[type="submit"] {
+      display: none;
+    }
+
+  @media only screen and (max-width: 600px) {
+    .main-nav {
+      font-size: 20px;
+      padding: 0;
+    }
+  }
+  /* faz o contato ir para o lado direito da pagina */
+  .push {
+    margin-left: auto;
+    font-size: 20px;
+    margin-right: 20px;
+    background-color: #5976de;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .push a:visited, a:hover, a:active{
+      text-decoration: none;
+      color: white;
+  }
+  
+  li {
+    padding: 20px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: white;
+  }
