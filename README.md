@@ -32,8 +32,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [GitHub Link](https://github.com/soumallyadev07/IP-Address-Tracker)
+- Live Site URL: [Live site URL](https://ip-addresstracker.herokuapp.com/)
 
 ## My process
 
