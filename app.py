@@ -2,12 +2,13 @@ from flask import Flask, render_template, redirect, url_for, session, request, g
 from functools import wraps
 from sawo import verifyToken
 import requests
+import os
 
 app = Flask(__name__)
-app.secret_key = "beufhbe2iufb3efv"
-sawo_key = "3bcfbd15-67dd-4d94-a31c-481caa5ac463"
-map_key = "pk.eyJ1Ijoic291bWFsbHlhZGV2IiwiYSI6ImNrcHI4OWs0ajAzdG0yd281czYxYjhtazcifQ.xtgiSgJ-ihupzlVie34pDA"
-geoip_key = "at_BRwsBp8KuxoFfjMln7iVdV37lr0Fd"
+app.secret_key = os.environ['secret_key']
+sawo_key = os.environ['sawo_key']
+map_key = os.environ['map_key']
+geoip_key = os.environ['geoip_key']
 
 def login_required(f):
     @wraps(f)
