@@ -57,4 +57,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

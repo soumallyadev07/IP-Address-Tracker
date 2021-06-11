@@ -13,7 +13,7 @@
                 <input type="text" id="ipdomain" class="bedrijfsmail" placeholder="IP/Domain" style="background-color: white; color: black; font-size: 18px;" required>
                 <div class="inputwrapper" style="background-color: #3f3f3f; padding-left: 10px;">
                     <label><input type="submit" value="" />
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><path transform="translate(16, 10)" fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6"/></svg>
+                        <svg xmlns="https://www.w3.org/2000/svg" width="48" height="48"><path transform="translate(16, 10)" fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6"/></svg>
                     </label>
                 </div>
                 <div class="seconddiv">
@@ -47,11 +47,10 @@
             ip = data.ip;
             console.log(ip);
 
-            fetch('http://ip-api.com/json/'+ ip).then(function(response) {
+            fetch('https://geo.ipify.org/api/v1?apiKey={{ geoip_key }}&ip='+ ip).then(function(response) {
             return response.json();
             }).then(function(data) {
-            console.log(data['country']);
-            mymap.setView([data['lat'], data['lon']], 15);
+            mymap.setView([data['location']['lat'], data['location']['lng']], 15);
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ map_key }}', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 maxZoom: 18,
@@ -60,11 +59,11 @@
                 zoomOffset: -1,
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
-            var marker = L.marker([data['lat'], data['lon']]).addTo(mymap);
+            var marker = L.marker([data['location']['lat'], data['location']['lng']]).addTo(mymap);
 
-            document.getElementById("ipaddr").innerHTML = ip;
-            document.getElementById("iploc").innerHTML = data['city'] + ', ' + data['regionName'] ;
-            document.getElementById("iptimezone").innerHTML = data['timezone'];
+            document.getElementById("ipaddr").innerHTML = data['ip'];
+            document.getElementById("iploc").innerHTML = data['location']['city'] + ', ' + data['location']['region'] ;
+            document.getElementById("iptimezone").innerHTML = data['location']['timezone'];
             document.getElementById("ipisp").innerHTML = data['isp'];
             }).catch(function() {
             console.log("Error");

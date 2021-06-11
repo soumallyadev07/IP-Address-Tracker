@@ -96,11 +96,10 @@
             ip = data.ip;
             console.log(ip);
 
-            fetch('http://ip-api.com/json/'+ ip).then(function(response) {
+            fetch('https://geo.ipify.org/api/v1?apiKey={{ geoip_key }}&ip='+ ip).then(function(response) {
             return response.json();
             }).then(function(data) {
-            console.log(data['country']);
-            var mymap = L.map('mapid').setView([data['lat'], data['lon']], 15);
+            mymap.setView([data['location']['lat'], data['location']['lng']], 15);
             L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ map_key }}', {
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                 maxZoom: 18,
@@ -109,14 +108,14 @@
                 zoomOffset: -1,
                 accessToken: 'your.mapbox.access.token'
             }).addTo(mymap);
-            var marker = L.marker([data['lat'], data['lon']]).addTo(mymap);
+            var marker = L.marker([data['location']['lat'], data['location']['lng']]).addTo(mymap);
 
-            document.getElementById("ipaddr").innerHTML = ip;
-            document.getElementById("iploc").innerHTML = data['city'] + ', ' + data['regionName'] ;
-            document.getElementById("iptimezone").innerHTML = data['timezone'];
+            document.getElementById("ipaddr").innerHTML = data['ip'];
+            document.getElementById("iploc").innerHTML = data['location']['city'] + ', ' + data['location']['region'] ;
+            document.getElementById("iptimezone").innerHTML = data['location']['timezone'];
             document.getElementById("ipisp").innerHTML = data['isp'];
-            }).catch(function() {
-            console.log("Error");
+            }).catch(function(err) {
+            console.log(err);
             });
         })
         
